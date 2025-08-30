@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Rocket, ArrowRight, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const CtaSection = () => {
   return (
@@ -29,10 +30,12 @@ const CtaSection = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <Button variant="cta" size="lg" className="text-lg px-10 py-6">
-                <Sparkles className="w-5 h-5 mr-2" />
-                Começar Gratuitamente
-                <ArrowRight className="w-5 h-5 ml-2" />
+              <Button variant="cta" size="lg" className="text-lg px-10 py-6" asChild>
+                <Link to="/upload">
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  Começar Gratuitamente
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Link>
               </Button>
             </div>
 
