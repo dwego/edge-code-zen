@@ -19,7 +19,7 @@ const steps = [
   },
   {
     icon: CheckCircle,
-    title: "4. Sua Aprovação",
+    title: "4. Espera Aprovação",
     description: "Revise as sugestões e aprove apenas as mudanças que fazem sentido para você."
   }
 ];
@@ -42,21 +42,7 @@ const ProcessSection = () => {
         </div>
 
         <div className="max-w-4xl mx-auto">
-          {/* Desktop Layout */}
-          <div className="hidden lg:flex items-center justify-between mb-8">
-            {steps.map((step, index) => (
-              <div key={index} className="flex items-center">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-primary-gradient rounded-full flex items-center justify-center mb-4 shadow-glow-primary">
-                    <step.icon className="w-8 h-8 text-white" />
-                  </div>
-                </div>
-                {index < steps.length - 1 && (
-                  <ArrowRight className="w-8 h-8 text-primary mx-8 animate-pulse" />
-                )}
-              </div>
-            ))}
-          </div>
+         
 
           {/* Cards */}
           <div className="grid lg:grid-cols-4 gap-6">

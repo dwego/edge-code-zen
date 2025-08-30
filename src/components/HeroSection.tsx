@@ -10,17 +10,13 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5"></div>
       
       {/* Floating Elements */}
-      <div className="absolute top-20 left-10 animate-float">
+      <div className="absolute top-20 left-[25vw] animate-float">
         <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
           <Code className="w-6 h-6 text-primary" />
         </div>
       </div>
-      <div className="absolute top-40 right-20 animate-float delay-75">
-        <div className="w-8 h-8 rounded-full bg-accent/30 flex items-center justify-center">
-          <Zap className="w-4 h-4 text-accent" />
-        </div>
-      </div>
-      <div className="absolute bottom-32 left-20 animate-float delay-150">
+        
+      <div className="absolute bottom-10 left-10 animate-float delay-150">
         <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center">
           <Brain className="w-5 h-5 text-primary" />
         </div>
@@ -41,9 +37,9 @@ const HeroSection = () => {
             </h1>
             
             <p className="text-xl md:text-2xl text-white/80 mb-8 leading-relaxed">
-              Otimização inteligente em tempo real com aprendizado contínuo.
+              Reduza tempos de compilação.
               <span className="block mt-2 text-accent font-medium">
-                Reduza tempos de compilação. Melhore performance.
+                Melhore performance.
               </span>
             </p>
 
@@ -51,9 +47,6 @@ const HeroSection = () => {
               <Button variant="hero" size="lg" className="text-lg px-8 py-6">
                 <Target className="w-5 h-5 mr-2" />
                 Começar Agora
-              </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 py-6 border-white/30 text-white hover:bg-white/10">
-                Ver Demo
               </Button>
             </div>
 
