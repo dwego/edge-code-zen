@@ -3,40 +3,53 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Code, Zap, Brain, Target, Upload as UploadIcon, FileCode, CheckCircle, Clock, Download } from "lucide-react";
+import File from "../assets/file.png";
+import Codeai from "../assets/codeai.png";
+import Performance from "../assets/performance.png";
+import {
+  Code,
+  Zap,
+  Brain,
+  Target,
+  Upload as UploadIcon,
+  FileCode,
+  CheckCircle,
+  Clock,
+  Download,
+} from "lucide-react";
 
-type ProcessStep = 'upload' | 'analyzing' | 'optimizing' | 'complete';
+type ProcessStep = "upload" | "analyzing" | "optimizing" | "complete";
 
 const HeroSection = () => {
-  const [currentStep, setCurrentStep] = useState<ProcessStep>('upload');
+  const [currentStep, setCurrentStep] = useState<ProcessStep>("upload");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [progress, setProgress] = useState(0);
   const [optimizationResults, setOptimizationResults] = useState({
-    originalTime: '2.3s',
-    optimizedTime: '0.8s',
-    improvement: '65%',
-    suggestions: 3
+    originalTime: "2.3s",
+    optimizedTime: "0.8s",
+    improvement: "65%",
+    suggestions: 3,
   });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.name.endsWith('.java')) {
+    if (file && file.name.endsWith(".java")) {
       setUploadedFile(file);
       startOptimizationProcess();
     }
   };
 
   const startOptimizationProcess = () => {
-    setCurrentStep('analyzing');
+    setCurrentStep("analyzing");
     setProgress(0);
-    
+
     // Simulate analysis
     const interval = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          setCurrentStep('optimizing');
+          setCurrentStep("optimizing");
           startOptimization();
           return 100;
         }
@@ -47,13 +60,13 @@ const HeroSection = () => {
 
   const startOptimization = () => {
     setProgress(0);
-    
+
     // Simulate optimization
     const interval = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          setCurrentStep('complete');
+          setCurrentStep("complete");
           return 100;
         }
         return prev + 15;
@@ -68,90 +81,83 @@ const HeroSection = () => {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    if (file && file.name.endsWith('.java')) {
+    if (file && file.name.endsWith(".java")) {
       setUploadedFile(file);
       startOptimizationProcess();
     }
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-hero-gradient">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5"></div>
-      
-      {/* Floating Elements */}
-      <div className="absolute top-20 left-[25vw] animate-float">
-        <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center">
-          <Code className="w-6 h-6 text-primary" />
-        </div>
-      </div>
-        
-      <div className="absolute bottom-10 left-10 animate-float delay-150">
-        <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center">
-          <Brain className="w-5 h-5 text-primary" />
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
-          <div className="text-center lg:text-left">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-white to-accent bg-clip-text text-transparent">
-                Edge AI
-              </span>
-              <br />
-              <span className="text-3xl md:text-5xl lg:text-6xl">
-                para Código Java
-              </span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-white/80 mb-8 leading-relaxed">
-              Reduza tempos de compilação.
-              <span className="block mt-2 text-accent font-medium">
-                Melhore performance.
-              </span>
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button variant="hero" size="lg" className="text-lg px-8 py-6">
-                <Target className="w-5 h-5 mr-2" />
-                Começar Agora
-              </Button>
+    <section className="min-h-screen flex-col items-center justify-center">
+      <div className="min-h-screen w-full flex flex-col items-center justify-center px-4">
+        <div className="items-center text-center flex-col">
+          <div className="mb-12 flex flex-col gap-2">
+            <h1 className="text-6xl">Compile.IQ</h1>
+            <p>Otimização de código inteligente em Java.</p>
+          </div>
+          <div className="flex items-center justify-center gap-12">
+            <div className="flex flex-col p-4 justify-center items-center gap-2 text-center">
+              <img src={File} alt="File logo" className="w-12 h-12" />
+              <h1
+                style={{
+                  background:
+                    "linear-gradient(90deg, #202020 0%, #868686 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Upload do <br />
+                Código
+              </h1>{" "}
             </div>
-
-            {/* Stats */}
-            <div className="mt-12 grid grid-cols-3 gap-8">
-              <div className="text-center lg:text-left">
-                <div className="text-2xl md:text-3xl font-bold text-accent">95%</div>
-                <div className="text-sm text-white/70">Redução no Tempo</div>
-              </div>
-              <div className="text-center lg:text-left">
-                <div className="text-2xl md:text-3xl font-bold text-accent">100%</div>
-                <div className="text-sm text-white/70">Integridade do Código</div>
-              </div>
-              <div className="text-center lg:text-left">
-                <div className="text-2xl md:text-3xl font-bold text-accent">∞</div>
-                <div className="text-sm text-white/70">Aprendizado Contínuo</div>
-              </div>
+            <div className="flex flex-col p-4 justify-center items-center gap-2 text-center">
+              <img src={Codeai} alt="File logo" className="w-12 h-12" />
+              <h1
+                style={{
+                  background:
+                    "linear-gradient(90deg, #202020 0%, #868686 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                IA <br />
+                Especializada
+              </h1>{" "}
+            </div>
+            <div className="flex flex-col p-4 justify-center items-center gap-2 text-center">
+              <img src={Performance} alt="File logo" className="w-12 h-12" />
+              <h1
+                style={{
+                  background:
+                    "linear-gradient(90deg, #202020 0%, #868686 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Mais <br />
+                Performance
+              </h1>{" "}
             </div>
           </div>
 
-          {/* Right Upload Section */}
           <div className="relative">
-            {currentStep === 'upload' && (
-              <Card className="border-dashed border-2 border-primary/30 bg-primary/5">
+            {currentStep === "upload" && (
+              <Card>
                 <CardContent className="p-8">
-                  <div 
-                    className="border-2 border-dashed border-primary/50 rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer"
+                  <div
+                    className="border-2 border-dashed rounded-lg px-32 py-4 text-center hover:border-primary transition-colors cursor-pointer"
                     onDragOver={handleDragOver}
                     onDrop={handleDrop}
                     onClick={() => fileInputRef.current?.click()}
                   >
-                    <UploadIcon className="w-12 h-12 text-primary mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2 text-white">Arraste seu arquivo aqui</h3>
-                    <p className="text-white/70 mb-4">ou clique para selecionar</p>
-                    <Badge variant="outline" className="text-sm">
+                    <UploadIcon className="w-12 h-12 mx-auto mb-4 " />
+                    <h3 className="text-lg font-semibold mb-2">
+                      Arraste seu arquivo aqui
+                    </h3>
+                    <p className="text-black/50 mb-4">
+                      ou clique para selecionar
+                    </p>
+                    <Badge variant="outline" className="text-sm text-black/70">
                       Apenas arquivos .java
                     </Badge>
                     <input
@@ -166,30 +172,36 @@ const HeroSection = () => {
               </Card>
             )}
 
-            {currentStep === 'analyzing' && (
+            {currentStep === "analyzing" && (
               <Card className="bg-card-gradient border-0 shadow-2xl">
                 <CardContent className="p-8 text-center">
                   <div className="w-16 h-16 bg-primary-gradient rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
                     <FileCode className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Analisando Código</h3>
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    Analisando Código
+                  </h3>
                   <p className="text-white/70 mb-6">
                     Identificando padrões e oportunidades...
                   </p>
-                  <p className="text-sm font-medium mb-2 text-white">{uploadedFile?.name}</p>
+                  <p className="text-sm font-medium mb-2 text-white">
+                    {uploadedFile?.name}
+                  </p>
                   <Progress value={progress} className="w-full mb-2" />
                   <p className="text-xs text-white/60">{progress}% concluído</p>
                 </CardContent>
               </Card>
             )}
 
-            {currentStep === 'optimizing' && (
+            {currentStep === "optimizing" && (
               <Card className="bg-card-gradient border-0 shadow-2xl">
                 <CardContent className="p-8 text-center">
                   <div className="w-16 h-16 bg-accent-gradient rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
                     <Zap className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Otimizando Performance</h3>
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    Otimizando Performance
+                  </h3>
                   <p className="text-white/70 mb-6">
                     Aplicando melhorias baseadas em Edge AI...
                   </p>
@@ -199,42 +211,51 @@ const HeroSection = () => {
               </Card>
             )}
 
-            {currentStep === 'complete' && (
+            {currentStep === "complete" && (
               <Card className="bg-card-gradient border-0 shadow-2xl">
                 <CardContent className="p-8 text-center">
                   <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <CheckCircle className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Otimização Concluída!</h3>
-                  
+                  <h3 className="text-xl font-semibold text-white mb-2">
+                    Otimização Concluída!
+                  </h3>
+
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div className="text-center p-4 bg-background/10 rounded-lg">
                       <Clock className="w-6 h-6 text-red-400 mx-auto mb-1" />
                       <p className="text-xs text-white/70">Original</p>
-                      <p className="text-lg font-bold text-red-400">{optimizationResults.originalTime}</p>
+                      <p className="text-lg font-bold text-red-400">
+                        {optimizationResults.originalTime}
+                      </p>
                     </div>
                     <div className="text-center p-4 bg-background/10 rounded-lg">
                       <Zap className="w-6 h-6 text-green-400 mx-auto mb-1" />
                       <p className="text-xs text-white/70">Otimizado</p>
-                      <p className="text-lg font-bold text-green-400">{optimizationResults.optimizedTime}</p>
+                      <p className="text-lg font-bold text-green-400">
+                        {optimizationResults.optimizedTime}
+                      </p>
                     </div>
                   </div>
-                  
-                  <Badge variant="outline" className="mb-4 border-green-400 text-green-400">
+
+                  <Badge
+                    variant="outline"
+                    className="mb-4 border-green-400 text-green-400"
+                  >
                     {optimizationResults.improvement} de melhoria
                   </Badge>
-                  
+
                   <div className="flex flex-col gap-2">
                     <Button variant="hero" size="sm" className="text-sm">
                       <Download className="w-4 h-4 mr-2" />
                       Baixar Código
                     </Button>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       className="text-sm text-white border-white/20 hover:bg-white/10"
                       onClick={() => {
-                        setCurrentStep('upload');
+                        setCurrentStep("upload");
                         setUploadedFile(null);
                         setProgress(0);
                       }}
@@ -245,12 +266,15 @@ const HeroSection = () => {
                 </CardContent>
               </Card>
             )}
-            
+
             {/* Floating Code Snippet */}
-            <div className="absolute -bottom-8 -left-8 bg-background/95 backdrop-blur-sm rounded-lg p-4 shadow-lg border">
+            <div style={{marginLeft: "25%"}} className="absolute bg-background/95 backdrop-blur-sm rounded-lg p-4 shadow-lg border">
               <code className="text-sm text-primary font-mono">
-                // Otimização aplicada<br/>
-                <span className="text-accent">compilationTime:</span> <span className="text-destructive">5ms</span> ↓ <span className="text-green-500">2ms</span>
+                // Otimização aplicada
+                <br />
+                <span className="text-accent">compilationTime:</span>{" "}
+                <span className="text-destructive">5ms</span> ↓{" "}
+                <span className="text-green-500">2ms</span>
               </code>
             </div>
           </div>
