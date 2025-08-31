@@ -8,6 +8,9 @@ import NotFound from "./pages/NotFound";
 import Input from "./pages/Input";
 import Waiting from "./pages/Waiting";
 import Finish from "./pages/Finish";
+import Details from "./pages/Details";
+import Gencode from "./pages/Gencode";
+import FinalWaiting from "./pages/FinalWaiting";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +26,9 @@ const App = () => (
           <Route path="/input" element={<Input />} />
           <Route path="/waiting" element={<Waiting />} />
           <Route path="/finish" element={<Finish />} />
+          <Route path="/finish/details" element={<Details />} />
+          <Route path="/finish/waiting" element={<FinalWaiting />} />
+          <Route path="/finish/gencode" element={<Gencode />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
