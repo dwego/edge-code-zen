@@ -1,11 +1,13 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import File from "../assets/file.png";
 import Codeai from "../assets/codeai.png";
 import Performance from "../assets/performance.png";
+import Arrow from "../assets/arrow.png";
 import {
   Code,
   Zap,
@@ -21,6 +23,7 @@ import {
 type ProcessStep = "upload" | "analyzing" | "optimizing" | "complete";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<ProcessStep>("upload");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [progress, setProgress] = useState(0);
@@ -57,7 +60,9 @@ const HeroSection = () => {
       });
     }, 200);
   };
-
+  const goToInput = () => {
+    navigate("/input");
+  };
   const startOptimization = () => {
     setProgress(0);
 
@@ -110,6 +115,7 @@ const HeroSection = () => {
                 Código
               </h1>{" "}
             </div>
+            <img src={Arrow} alt="Arrow" className="h-4" />
             <div className="flex flex-col p-4 justify-center items-center gap-2 text-center">
               <img src={Codeai} alt="File logo" className="w-12 h-12" />
               <h1
@@ -124,6 +130,7 @@ const HeroSection = () => {
                 Especializada
               </h1>{" "}
             </div>
+            <img src={Arrow} alt="Arrow" className="h-4" />
             <div className="flex flex-col p-4 justify-center items-center gap-2 text-center">
               <img src={Performance} alt="File logo" className="w-12 h-12" />
               <h1
@@ -168,6 +175,7 @@ const HeroSection = () => {
                       className="hidden"
                     />
                   </div>
+                  <Button onClick={goToInput}>input (temporary)</Button>
                 </CardContent>
               </Card>
             )}
