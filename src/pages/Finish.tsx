@@ -29,8 +29,8 @@ const Finish = () => {
           </div>
         </div>
         <div className="flex gap-4 w-full">
-          <div className="flex justify-center gap-4 w-full items-center border p-2 rounded-lg cursor-pointer" style={{backgroundColor: "rgba(255, 0, 0, 0.25)", borderColor: "#FF0000", textAlign: "center"}}>
-              <h1 className="font-bold text-lg text-center" style={{color: "#FF0000"}}>Revisar Alterações</h1>
+          <div onClick={() => navigate("/input")} className="flex justify-center gap-4 w-full items-center border p-2 rounded-lg cursor-pointer" style={{backgroundColor: "rgba(73, 73, 73, 0.25)", borderColor: "#202020", textAlign: "center"}}>
+              <h1 className="font-bold text-lg text-center" style={{color: "#202020"}}>Revisar Alterações</h1>
           </div>
            <div onClick={() => navigate("./waiting")} className="flex justify-center gap-4 w-full items-center border p-2 rounded-lg cursor-pointer" style={{backgroundColor: "rgba(0, 154, 46, 0.25)", borderColor: "#00910C"}}>
               <h1 className="font-bold text-lg" style={{color: "#00910C"}} >Aceitar & Gerar Código</h1>
