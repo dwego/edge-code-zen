@@ -13,7 +13,6 @@ const Gencode = () => {
             {`// Código Melhorado
 const soma = (a, b) => a + b;`}
           </code>
-          <button>Run MS!</button>
         </div>
         <p className="mt-5">
           Aproveite e entre na nossa{" "}
