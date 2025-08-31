@@ -8,17 +8,39 @@ import File from "../assets/file.png";
 import Codeai from "../assets/codeai.png";
 import Performance from "../assets/performance.png";
 import Arrow from "../assets/arrow.png";
+import axios from "axios";
 import {
-  Code,
   Zap,
-  Brain,
-  Target,
   Upload as UploadIcon,
   FileCode,
   CheckCircle,
   Clock,
   Download,
 } from "lucide-react";
+
+// >>>> CLIENTE AXIOS CORRIGIDO
+const api = axios.create({
+  baseURL: "http://localhost:8000",
+  timeout: 60000,
+  // withCredentials: true, // habilite se sua API usar cookies/sessão
+});
+
+// ————————————————————————
+// Tipos esperados da API (ajuste conforme seu backend)
+// ————————————————————————
+type Metrics = {
+  original_ms?: number;
+  optimized_ms?: number;
+  improvement_percent?: number; // ex.: 65
+};
+
+type UploadResponse = {
+  optimized_code?: string; // Código Java otimizado
+  metrics?: Metrics; // Métricas de tempo
+  suggestions_count?: number; // Qtde de recomendações
+  // job_id?: string;             // Caso faça processamento assíncrono
+  // message?: string;
+};
 
 type ProcessStep = "upload" | "analyzing" | "optimizing" | "complete";
 
@@ -27,69 +49,142 @@ const HeroSection = () => {
   const [currentStep, setCurrentStep] = useState<ProcessStep>("upload");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [progress, setProgress] = useState(0);
+  const [optimizedCode, setOptimizedCode] = useState<string>("");
   const [optimizationResults, setOptimizationResults] = useState({
-    originalTime: "2.3s",
-    optimizedTime: "0.8s",
-    improvement: "65%",
-    suggestions: 3,
+    originalTime: "—",
+    optimizedTime: "—",
+    improvement: "—",
+    suggestions: 0,
   });
+  const [errorMsg, setErrorMsg] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && file.name.endsWith(".java")) {
-      setUploadedFile(file);
-      startOptimizationProcess();
-    }
-  };
+  // Utilitário para formatar ms em "Xs" com 1 casa
+  const msToSeconds = (ms?: number) =>
+    typeof ms === "number" ? `${(ms / 1000).toFixed(1)}s` : "—";
 
-  const startOptimizationProcess = () => {
+  // Faz upload + acompanha progresso + preenche resultados
+  const uploadAndOptimize = async (file: File) => {
+    setErrorMsg("");
+    setOptimizedCode("");
     setCurrentStep("analyzing");
     setProgress(0);
 
-    // Simulate analysis
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setCurrentStep("optimizing");
-          startOptimization();
-          return 100;
-        }
-        return prev + 10;
-      });
-    }, 200);
-  };
-  const goToInput = () => {
-    navigate("/input");
-  };
-  const startOptimization = () => {
-    setProgress(0);
+    const formData = new FormData();
+    formData.append("file", file);
 
-    // Simulate optimization
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setCurrentStep("complete");
-          return 100;
+    try {
+      // Upload com progresso real
+      const { data } = await api.post<UploadResponse>(
+        "/upload/java",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          onUploadProgress: (evt) => {
+            if (!evt.total) {
+              // alguns servers não mandam 'total'; evita NaN
+              setProgress((prev) => (prev < 95 ? prev + 5 : 95));
+              return;
+            }
+            const percent = Math.round((evt.loaded * 100) / evt.total);
+            setProgress(percent);
+          },
         }
-        return prev + 15;
+      );
+
+      // Avança para "optimizing" e faz uma animação curta (caso backend já tenha otimizado)
+      setCurrentStep("optimizing");
+      await animateToComplete(700, 20); // 0.7s animando a fase "optimizing"
+      setCurrentStep("complete");
+
+      // Extrai dados da resposta
+      const metrics = data.metrics || {};
+      const originalTime = msToSeconds(metrics.original_ms);
+      const optimizedTime = msToSeconds(metrics.optimized_ms);
+      const improvement =
+        typeof metrics.improvement_percent === "number"
+          ? `${metrics.improvement_percent}%`
+          : "—";
+
+      setOptimizationResults({
+        originalTime,
+        optimizedTime,
+        improvement,
+        suggestions: data.suggestions_count ?? 0,
       });
-    }, 300);
+
+      setOptimizedCode(data.optimized_code || "");
+    } catch (err: any) {
+      console.error(err);
+      setErrorMsg(
+        err?.response?.data?.detail ??
+          err?.message ??
+          "Falha ao enviar/otimizar o arquivo."
+      );
+      // Volta para upload para tentar de novo
+      setCurrentStep("upload");
+      setProgress(0);
+    }
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
+  const goToInput = () => navigate("/input");
+  // Pequena animação de progresso para a etapa "optimizing"
+  const animateToComplete = (durationMs: number, stepMs: number) =>
+    new Promise<void>((resolve) => {
+      setProgress(0);
+      const interval = setInterval(() => {
+        setProgress((prev) => {
+          const next =
+            prev + Math.max(1, Math.floor(100 * (stepMs / durationMs)));
+          if (next >= 100) {
+            clearInterval(interval);
+            resolve();
+            goToInput();
+            return 100;
+          }
+          return next;
+        });
+      }, stepMs);
+    });
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.name.endsWith(".java")) {
+      setErrorMsg("Selecione um arquivo .java");
+      return;
+    }
+    setUploadedFile(file);
+    uploadAndOptimize(file);
   };
+
+  const handleDragOver = (e: React.DragEvent) => e.preventDefault();
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && file.name.endsWith(".java")) {
-      setUploadedFile(file);
-      startOptimizationProcess();
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+    if (!file.name.endsWith(".java")) {
+      setErrorMsg("Selecione um arquivo .java");
+      return;
     }
+    setUploadedFile(file);
+    uploadAndOptimize(file);
+  };
+
+  // Baixa o código otimizado como arquivo .java
+  const handleDownload = () => {
+    if (!optimizedCode) return;
+    const blob = new Blob([optimizedCode], { type: "text/x-java-source" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const name = uploadedFile?.name
+      ? uploadedFile.name.replace(/\.java$/i, "") + ".optimized.java"
+      : "optimized.java";
+    a.href = url;
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -100,6 +195,8 @@ const HeroSection = () => {
             <h1 className="text-6xl">Compile.IQ</h1>
             <p>Otimização de código inteligente em Java.</p>
           </div>
+
+          {/* Trio de features */}
           <div className="flex items-center justify-center gap-12">
             <div className="flex flex-col p-4 justify-center items-center gap-2 text-center">
               <img src={File} alt="File logo" className="w-12 h-12" />
@@ -147,7 +244,7 @@ const HeroSection = () => {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative mt-8">
             {currentStep === "upload" && (
               <Card>
                 <CardContent className="p-8">
@@ -175,7 +272,14 @@ const HeroSection = () => {
                       className="hidden"
                     />
                   </div>
-                  <Button onClick={goToInput}>input (temporary)</Button>
+
+                  {errorMsg && (
+                    <p className="text-sm text-red-600 mt-3">{errorMsg}</p>
+                  )}
+
+                  <Button className="mt-6" onClick={goToInput}>
+                    input (temporary)
+                  </Button>
                 </CardContent>
               </Card>
             )}
@@ -254,7 +358,13 @@ const HeroSection = () => {
                   </Badge>
 
                   <div className="flex flex-col gap-2">
-                    <Button variant="hero" size="sm" className="text-sm">
+                    <Button
+                      variant="hero"
+                      size="sm"
+                      className="text-sm"
+                      onClick={handleDownload}
+                      disabled={!optimizedCode}
+                    >
                       <Download className="w-4 h-4 mr-2" />
                       Baixar Código
                     </Button>
@@ -266,6 +376,14 @@ const HeroSection = () => {
                         setCurrentStep("upload");
                         setUploadedFile(null);
                         setProgress(0);
+                        setOptimizedCode("");
+                        setOptimizationResults({
+                          originalTime: "—",
+                          optimizedTime: "—",
+                          improvement: "—",
+                          suggestions: 0,
+                        });
+                        setErrorMsg("");
                       }}
                     >
                       Novo Arquivo
@@ -276,7 +394,10 @@ const HeroSection = () => {
             )}
 
             {/* Floating Code Snippet */}
-            <div style={{marginLeft: "25%"}} className="absolute bg-background/95 backdrop-blur-sm rounded-lg p-4 shadow-lg border">
+            <div
+              style={{ marginLeft: "25%" }}
+              className="absolute bg-background/95 backdrop-blur-sm rounded-lg p-4 shadow-lg border"
+            >
               <code className="text-sm text-primary font-mono">
                 // Otimização aplicada
                 <br />
