@@ -9,13 +9,13 @@ const steps = [
   },
   {
     icon: Clock,
-    title: "2. Análise Temporal",
-    description: "Definição dinâmica de limites baseada no tamanho - exemplo: 100MB = 5ms mínimo."
+    title: "2. Defina o Limite",
+    description: "Escolha o tempo alvo (ms, s, m) para execução/compilação conforme sua necessidade."
   },
   {
     icon: Brain,
-    title: "3. IA Especializada",
-    description: "Nossa base Java analisa o código e propõe otimizações inteligentes específicas."
+    title: "3. IA Otimiza",
+    description: "Nossa base especializada em Java analisa o código e sugere otimizações precisas e seguras."
   },
   {
     icon: CheckCircle,
