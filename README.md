@@ -112,79 +112,19 @@ git clone https://github.com/seu-usuario/compileiq.git
 cd compileiq
 ```
 
-Crie e ative um ambiente virtual:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate    # Linux / MacOS
-.venv\Scripts\activate      # Windows
-```
-
 Instale as dependências:
 
 ```bash
-pip install -r requirements.txt
+npm install
 ```
 
 ---
 
 ## ▶️ Como Usar
 
-O cliente principal do sistema está localizado em `app/client.py`.  
-Ele será responsável por processar o XML, analisar os tracelogs e gerar recomendações.
-
 ```bash
-python app/client.py --xml caminho/do/arquivo.xml --trace caminho/do/tracelog.log --timeout 200
-```
-
-Exemplo:
-
-```bash
-python app/client.py --xml data/xml/output.xml --trace data/traces/app.log --timeout 300
-```
-
----
-
-## 📊 Saídas Geradas
-
-Após a execução, o sistema gera:
-
-- **Logs detalhados** → `data/logs/optimization.log`
-- **Sugestões de otimização** → `data/logs/recommendations.log`
-- **Resumo da execução** → Exibido no terminal
-
----
-
-## 🧩 Exemplo de Uso Real
-
-```bash
-python app/client.py --xml ./data/xml/execucao.xml --trace ./data/traces/prod.log --timeout 150
-```
-
-**Saída esperada:**
-
-```
-[INFO] Iniciando análise...
-[INFO] Executando IA de otimização...
-[OK] 4 tasks foram otimizadas com sucesso.
-[WARN] 2 tasks não atingiram o limite de 150ms.
-[INFO] Recomendações foram salvas em: data/logs/recommendations.log
-```
-
----
-
-## 🧑‍💻 Contribuindo
-
-Este projeto é **open source**!  
-Sinta-se livre para abrir **issues** e enviar **pull requests**.
-
-1. Faça um **fork** do projeto.
-2. Crie uma nova branch: `git checkout -b feature/sua-feature`
-3. Commit suas mudanças: `git commit -m 'feat: adiciona nova feature'`
-4. Envie para o repositório: `git push origin feature/sua-feature`
-5. Abra um **Pull Request** 🎉
-
----
+npm run dev`
+``
 
 ## 📜 Licença
 
